@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<style>
+    .sample{
+        position: absolute;
+        top: 100px;
+        left: 100px;
+    }
+
+    .wrapper{
+        width: 100%;
+        height: 100vh;
+        background-color: silver;
+    }
+</style>
+
+<div class="wrapper">
+<img class="sample" src="http://localhost:8080/jsonEx/imgs/1_000.jpg">
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+
+    // var count = 0;
+    //
+    // setInterval(function () {
+    //     console.log("............" + count++);
+    // },100);
+
+
+    var startX, endX;
+    var direction;
+    var currentPage = 0;
+
+    var sample = $('.sample');
+
+    var host="http://10.10.10.96:8080";
+
+    //모바일에서 사용하려면 mousedown이고 웹에서 사용하려면 touchstart를 쓰는 것이다.
+    $('.sample').on("touchstart mousedown", function (e) {
+        e.preventDefault();
+        startX = e.pageX;
+    });
+
+    $('.sample').on("touchend mouseup", function (e) {
+        e.preventDefault();
+        endX = e.pageX;
+
+        var gap = startX - endX;
+
+        direction = gap > 0 ? "f":"p";
+
+        console.log(direction);
+
+        $.getJSON("http://10.10.10.96:8080/jsonEx/webtoon",{page:currentPage, dir:direction},function(data){
+            console.log(data);
+            if(direction === 'f') {
+                currentPage++;
+            }else{
+                currentPage--;
+            }
+
+            sample.attr("src",host + data.dest);
+
+        });
+    });
+
+    // $('.wrapper').on("mousemove",function (e) {
+    //
+    //     var xPos = e.pageX + "px";
+    //     var yPos = e.pageY + "px";
+    //
+    //     console.log(xPos,yPos);
+    //
+    //     $('.sample').animate({left:xPos, top:yPos},10,function(){
+    //         console.log("move end...");
+    //     });
+    //     console.log(e);
+    //
+    // });
+
+</script>
+
+</body>
+</html>
